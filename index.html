@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>AR viewer</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/responsive.css">
+    
+</head>
+<body data-new-gr-c-s-check-loaded="14.989.0" data-gr-ext-installed="">
+
+<script type="module">
+
+    var language, isOnlyAR;
+
+    // Launch quick look AR after it was ready
+    var realityURL, glbURL, bannerBlueText, bannerTitle, bannerSubtitle, price, bannerURL, androidBannerTitle, placement;
+
+    window.addEventListener("load", () => {
+        // Detect device
+        const params = new URLSearchParams(window.location.search);
+
+        console.log("start 1");
+        language = params.get('lang') ? parseInt(params.get('lang')) : 0;
+        isOnlyAR = params.get('isOnlyAR') ? !(params.get('isOnlyAR') === 'false') : true;
+        
+        fetch('./example.json').then((res) => {
+            return res.json();
+        }).then((data) => {
+            // check right language
+            if(data.bannerBlueText.length-1 >= language){
+                bannerBlueText = data.bannerBlueText[language];
+            }
+            else {bannerBlueText = data.bannerBlueText[0];}
+
+            if(data.bannerTitle.length-1 >= language){
+                bannerTitle = data.bannerTitle[language];
+            }
+            else {bannerTitle = data.bannerTitle[0];}
+            
+            if(data.bannerSubtitle.length-1 >= language){
+                bannerSubtitle = data.bannerSubtitle[language];
+            }
+            else {bannerSubtitle = data.bannerSubtitle[0];}
+
+            if(data.androidBannerTitle.length-1 >= language){
+                androidBannerTitle = data.androidBannerTitle[language];
+            }
+            else {androidBannerTitle = data.androidBannerTitle[0];}
+            
+            bannerBlueText = bannerBlueText.replace(/ /g, "%20");
+            bannerTitle = bannerTitle.replace(/ /g, "%20");
+            bannerSubtitle = bannerSubtitle.replace(/ /g, "%20");
+
+            price = data.price;
+            bannerURL = data.bannerURL;
+            placement = data.placement;
+            
+            console.log("bannerBlueText = " + bannerBlueText + ", bannerTitle = " + bannerTitle + ", bannerSubtitle = " + bannerSubtitle + ", androidBannerTitle = " + androidBannerTitle)
+
+            runAR();
+        });
+        
+    });
+    
+    function runAR(){
+        const name = new URLSearchParams(window.location.search).get('id');
+        console.log("runAR name = " + name);
+        
+        if( /iPhone|iPad|iPod/i.test(navigator.userAgent) ) {
+            realityURL = `https://s3.eu-west-2.amazonaws.com/product.baetes.com/${name}.reality`;
+            launchIOSQuickLookAR();
+            const a = document.createElement("a");
+        }
+        else {
+            glbURL = `https://s3.eu-west-2.amazonaws.com/product.baetes.com/${name}.glb`;
+            
+            sessionStorage.setItem("androidBannerTitle", androidBannerTitle);
+            sessionStorage.setItem("glbURL", glbURL);
+            sessionStorage.setItem("bannerURL", bannerURL);
+            sessionStorage.setItem("name", name);
+            sessionStorage.setItem("placement", placement);
+            
+            window.location.href = "./html/android.html";
+            // launchModelViewer();
+        }
+    }
+
+
+    if (a.relList.supports("ar")) {
+        
+        // launchIOSQuickLookAR();
+        // AR is available.
+    }
+
+    function launchIOSQuickLookAR() {
+        
+        document.getElementById("ar").innerHTML += '<a\n' +
+            '            rel="ar"\n' +
+            '            id="ar-link"\n' +
+            '            href=' + realityURL + '#callToAction=' + bannerBlueText + '&checkoutTitle=' + bannerTitle + '&checkoutSubtitle=' + bannerSubtitle + '&price=$' + price + '\n' +
+            '    >\n' +
+            '        <img\n' +
+            '                src="./image/white.png"\n' +
+            '        />\n' +
+            '    </a>';
+
+        console.log("right now");
+        const linkElement = document.getElementById("ar-link");
+        linkElement.addEventListener("message", function (event) {
+            console.log("press banner 1");
+            if (event.data == "_apple_ar_quicklook_button_tapped") {
+                console.log("press banner 2");
+                window.location.replace(bannerURL);
+            }
+        }, false);
+
+        document.getElementById("ar-link").click();
+    }
+
+</script>
+
+
+<h2 style="text-align: center">Just a second</h2>
+
+<div id="ar" class="myPreview">
+    
+</div>
+
+</body>
+</html>

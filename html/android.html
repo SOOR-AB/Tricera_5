@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--    <title>AR viewer</title>-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+</head>
+<body data-new-gr-c-s-check-loaded="14.989.0" data-gr-ext-installed="">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script src="https://unpkg.com/fullscreen-polyfill/dist/fullscreen.polyfill.js"></script>
+
+<script type="module">
+
+    var bannerURL;
+    // Open AR in model-viewer
+    window.addEventListener("load", () => {
+        launchModelViewer();
+    });
+    
+    function  launchModelViewer(){
+        console.log("launchModelViewer()");
+        
+        const androidBannerTitle = sessionStorage.getItem("androidBannerTitle");
+        const glbURL = sessionStorage.getItem("glbURL");
+        const placement = sessionStorage.getItem("placement");
+        bannerURL = sessionStorage.getItem("bannerURL");
+        console.log("launchModelViewer() androidBannerTitle = " + androidBannerTitle + ", bannerURL = " + bannerURL);
+        document.getElementById("qrCodeImage").innerHTML += '<img src="https://s3.eu-west-2.amazonaws.com/product.baetes.com/' + sessionStorage.getItem("name") + '.PNG" width="150" height="150" alt="AR Mode">';
+        document.getElementById('grid-container-id').innerHTML += '<model-viewer\n' +
+            '            id="myViewer"\n' +
+            '            alt="Test model with a banner in iOS quick look"\n' +
+            '            ar ar-modes="webxr scene-viewer quick-look"\n' +
+            '            seamless-poster shadow-intensity="1"\n' +
+            '            loading="eager"\n' +
+            '            ar ar-placement=' + 'wall' + '\n' +
+            '            poster="../image/loading4.gif"\n' +
+            '            ar-modes="webxr"\n' +
+            '            quick-look-browsers="safari chrome"\n' +
+            '            style="background-color: unset;"\n' +
+            '            camera-controls enable-pan>\n' +
+            '        <input slot="ar-button" class="ar-button" value="submit" type="image" src="../image/ariconsiyah.png" width="30px" height="30px">\n' +
+            // '        <div class="frame">\n' +
+            // '            <button id="myBanner" class="banner" onclick="pressBanner()">\n' +
+            // '            </button>\n' +
+            // '        </div>\n' +
+            '       <div class="slider">\n' +
+            '           <div id="mySlides" class="slides">\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '    </model-viewer>'
+        // document.getElementById("myBanner").innerHTML += '<banner-text>' + androidBannerTitle + '</banner-text>';
+        // document.querySelector(".frame").addEventListener('beforexrselect', (ev) => {
+        //     // Keep interactions from affecting the XR scene.
+        //     console.log("document.querySelector(.frame).addEventListener beforexrselect");
+        //     ev.preventDefault();
+        // });
+
+            setTimeout(
+            function() {
+                console.log("modelViewer activateAR()");
+                var modelViewer = document.getElementById('myViewer');
+                modelViewer.src = glbURL;
+                modelViewer.activateAR();
+                addSelectorButtons();
+            }, 200);
+    }
+    
+    function addSelectorButtons(){
+
+        console.log("addSelectorButtons() start");
+        const names = ['Tricera_5']
+        
+        var buttons = 
+'\n        <button class="slide selected" onClick="switchSrc(this, \'' + names[0] + '\')" style="background-image: url(\'../image/icons/Icon1.jpg\');">\n' +
+'        </button>\n';
+        
+        //for (let i = 1; i < 3; i++){
+        //    buttons +=
+//'        <button class="slide" onClick="switchSrc(this, \'' + names[i] + '\')" style="background-image: url(\'../image/icons/Icon' + (i + 1) + '.jpg\');">\n' +
+//'        </button>\n'
+ //       }
+
+        document.getElementById("mySlides").innerHTML += buttons;
+        
+        console.log("addSelectorButtons() buttons added");
+
+        const modelViewer = document.querySelector("model-viewer");
+
+        window.switchSrc = (element, name) => {
+            // const base = "https://s3.eu-west-2.amazonaws.com/product.baetes.com/LL_" + name + ".glb";
+            modelViewer.src ="https://s3.eu-west-2.amazonaws.com/product.baetes.com/" + name + ".glb";
+            // modelViewer.poster = base + '.webp';
+            const slides = document.querySelectorAll(".slide");
+            slides.forEach((element) => {element.classList.remove("selected");});
+            element.classList.add("selected");
+        };
+
+        console.log("addSelectorButtons() window.switchSrc end");
+
+        document.querySelector(".slider").addEventListener('beforexrselect', (ev) => {
+            // Keep slider interactions from affecting the XR scene.
+            ev.preventDefault();
+        });
+
+        switchSrc(this, names[0]);
+        
+        console.log("addSelectorButtons() end");
+    }
+
+    window.pressBanner = () => {
+        console.log("pressBanner");
+        window.location.replace(bannerURL);
+    }
+
+    // document.querySelector(".frame").addEventListener('beforexrselect', (ev) => {
+    //     // Keep interactions from affecting the XR scene.
+    //     console.log("document.querySelector(.frame).addEventListener beforexrselect");
+    //     ev.preventDefault();
+    // });
+    
+</script>
+
+
+<div id="grid-container-id" class="grid-container"style="background: white; overflow-x: hidden;">
+    
+</div>
+
+<div>
+    <a href="#modal" class="modal-open"><img id="optionalstuff" src="../image/ariconsiyah.png" width="40px" height="40px" alt="AR Mode"></a>
+    <div class="modal" id="modal">
+        <div class="modal__content">
+            <a href="#" class="modal__close">×</a>
+            <center><p class="ariconbeyaz"><img src="../image/ariconbeyaz.png" width="100" height="100" alt="AR Mode"></p></center>
+            <center><h1 class="modal__heading">AUGMENTED REALITY</h1></center>
+            <center><p class="modal__paragraph">For AR Experience Go iOS or Android Mobile Devices! </p></center>
+            <center><p class="modal__paragraph">Than Click on AR Button.</p></center>
+            <p></p>
+            <center><p class="lambaqr" id="qrCodeImage"></p></center>
+        </div>
+    </div>
+</div>
+
+
+
+</body>
+</html>
