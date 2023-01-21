@@ -1,9 +1,9 @@
 {
-    "bannerBlueText": ["Buy now"],
-    "bannerTitle": ["Original painting for nature lovers"],
-    "bannerSubtitle": ["Tricera"],
-    "androidBannerTitle": ["Original painting for nature lovers"],
-    "price": "100",
-    "bannerURL": "https://www.tricera.net/artwork/painting/acrylic-art/id81071200031",
-    "placement": "wall"
+  "bannerBlueText": [ "Buy now" ],
+  "bannerTitle": [ "Original painting for nature lovers" ],
+  "bannerSubtitle": [ "Tricera" ],
+  "androidBannerTitle": [ "Original painting for nature lovers" ],
+  "price": "100",
+  "bannerURL": "https://www.tricera.net/ja/artwork/painting/oil-painting/id81020620002",
+  "placement": "wall"
 }
